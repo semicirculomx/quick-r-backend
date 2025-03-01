@@ -1,0 +1,2 @@
+- Use ES module format
+- Use axios for api calls
