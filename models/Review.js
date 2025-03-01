@@ -10,11 +10,11 @@ const reviewSchema = new Schema({
   },
   reviewer: {
     type: { type: String, enum: ['client', 'operator'], required: true },
-    id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'reviewer.type' }
+    id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'User' }
   },
   reviewee: {
     type: { type: String, enum: ['client', 'operator', 'service'], required: true },
-    id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'reviewee.type' }
+    id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'User' }
   },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String },
@@ -40,14 +40,6 @@ const reviewSchema = new Schema({
     comment: { type: String },
     createdAt: { type: Date }
   },
-  
-  // Reportes
-  reports: [{
-    reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    reason: { type: String },
-    status: { type: String, enum: ['pending', 'reviewed', 'dismissed'] },
-    createdAt: { type: Date, default: Date.now }
-  }],
   
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

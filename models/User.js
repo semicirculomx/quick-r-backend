@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const UsuarioSchema = new Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -24,8 +24,8 @@ const UsuarioSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['cliente', 'operador', 'admin'],
-    default: 'cliente'
+    enum: ['client', 'operator', 'admin'],
+    default: 'client'
   },
   phone: {
     type: String
@@ -64,7 +64,7 @@ const UsuarioSchema = new Schema({
     },
     // Categorías en las que puede trabajar (en lugar de servicios específicos)
     serviceCategories: [{
-      category: { type: mongoose.Schema.Types.ObjectId, ref: 'Categoria' }
+      category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
     }],
     // Estado actual del operador
     currentStatus: {
@@ -87,18 +87,18 @@ const UsuarioSchema = new Schema({
 }, { timestamps: true });
 
 // Método para verificar si un usuario es operador
-UsuarioSchema.methods.isOperator = function () {
-  return this.role === 'operador';
+userSchema.methods.isOperator = function () {
+  return this.role === 'operator';
 };
 
 // Método para verificar si un usuario es administrador
-UsuarioSchema.methods.isAdmin = function () {
+userSchema.methods.isAdmin = function () {
   return this.role === 'admin';
 };
 
 // Método para actualizar el estado de disponibilidad del operador
-UsuarioSchema.methods.updateOperatorAvailability = async function (status) {
-  if (this.role !== 'operador') {
+userSchema.methods.updateOperatorAvailability = async function (status) {
+  if (this.role !== 'operator') {
     throw new Error('Solo los operadores pueden actualizar su disponibilidad');
   }
 
@@ -107,8 +107,8 @@ UsuarioSchema.methods.updateOperatorAvailability = async function (status) {
 };
 
 // Método para actualizar el rating del operador
-UsuarioSchema.methods.updateOperatorRating = async function (newRating) {
-  if (this.role !== 'operador') {
+userSchema.methods.updateOperatorRating = async function (newRating) {
+  if (this.role !== 'operator') {
     throw new Error('Solo los operadores pueden recibir calificaciones');
   }
 
@@ -124,5 +124,5 @@ UsuarioSchema.methods.updateOperatorRating = async function (newRating) {
   return this.save();
 };
 
-const Usuario = mongoose.model('Usuario', UsuarioSchema);
-export default Usuario;
+const User = mongoose.model('User', userSchema);
+export default User;

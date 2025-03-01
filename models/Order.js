@@ -2,16 +2,16 @@
 import mongoose from'mongoose';
 
 const serviceOrderSchema = new mongoose.Schema({
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Servicio' }],
-  client: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
-  operator: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
+  client: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  operator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   status: { 
     type: String, 
     enum: ['solicited', 'assigned', 'in_process', 'finalized', 'cancelled'],
     default: 'solicited'
   },
   scheduledDate: { type: Date, required: true },
-  location: { type: mongoose.Schema.Types.ObjectId, ref: 'Direccion' },
+  location: { type: mongoose.Schema.Types.ObjectId, ref: 'Address' },
   specialInstructions: { type: String },
   // Información de precios
   basePrice: { type: Number, required: true }, // Precio base del servicio al momento de la orden

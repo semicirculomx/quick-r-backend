@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const servicioSchema = new Schema({
+const serviceSchema = new Schema({
   name: { type: String, required: true, trim: true },
   description: { type: String, required: true, trim: true },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Categoria', required: true },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
   subcategory: { type: String, required: false, trim: true },
   price: { type: Number, required: true },
   duration: { type: Number, required: true }, // Duración estimada en minutos
@@ -14,5 +14,5 @@ const servicioSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const Servicio = mongoose.model('Servicio', servicioSchema);
+const Servicio = mongoose.model('Service', serviceSchema);
 export default Servicio;

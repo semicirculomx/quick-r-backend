@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const direccionSchema = new Schema({
+const addressSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -44,5 +44,5 @@ const direccionSchema = new Schema({
   }
 });
 
-const Direccion = mongoose.model('Direccion', direccionSchema);
+const Direccion = mongoose.model('Address', addressSchema);
 export default Direccion;

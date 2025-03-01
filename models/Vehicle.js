@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const vehiculoSchema = new Schema({
+const vehicleSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -36,4 +36,5 @@ const vehiculoSchema = new Schema({
   }
 });
 
-export default mongoose.model('Vehiculo', vehiculoSchema);
+const Vehicle = mongoose.model('Vehicle', vehicleSchema);
+export default Vehicle;
