@@ -5,18 +5,11 @@ export const createService = async (serviceData) => {
   try {
     // Crear nuevo servicio en catálogo
     const service = new Service({
-      name: serviceData.name,
+      title: serviceData.title,
       description: serviceData.description,
       category: serviceData.category, // 'Paquetes', 'Detailing', 'Individuales'
       price: serviceData.price,
-      subcategory: serviceData.subcategory,
-      // Precios según tamaño del vehículo
-      // priceBySize: {
-      //   small: serviceData.priceBySize?.small || serviceData.basePrice,
-      //   medium: serviceData.priceBySize?.medium || serviceData.basePrice * 1.2,
-      //   large: serviceData.priceBySize?.large || serviceData.basePrice * 1.5
-      // },
-      // active: true
+      images: serviceData.images,
     });
 
     const savedService = await service.save();

@@ -15,7 +15,7 @@ const vehicleSchema = new Schema({
   },
   size: {
     type: String,
-    enum: ['pequeño', 'mediano', 'grande', 'extra-grande'],
+    enum: ['small', 'medium', 'big', 'other'],
     required: [true, 'El tamaño del vehículo es obligatorio']
   },
   brand: String,

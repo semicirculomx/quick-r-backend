@@ -1,69 +1,23 @@
-// models/ServiceOrder.js - Modelo para órdenes de servicio
-import mongoose from'mongoose';
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
-const serviceOrderSchema = new mongoose.Schema({
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
-  client: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  operator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  status: { 
-    type: String, 
-    enum: ['solicited', 'assigned', 'in_process', 'finalized', 'cancelled'],
-    default: 'solicited'
-  },
-  scheduledDate: { type: Date, required: true },
-  location: { type: mongoose.Schema.Types.ObjectId, ref: 'Address' },
-  specialInstructions: { type: String },
-  // Información de precios
-  basePrice: { type: Number, required: true }, // Precio base del servicio al momento de la orden
-  additionalCharges: [{
-    description: { type: String },
-    amount: { type: Number }
+const orderSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  services: [{
+    product: { type: Schema.Types.ObjectId, ref: 'Service', required: true },
+    quantity: { type: Number, required: true },
   }],
-  discount: { type: Number, default: 0 },
-  finalPrice: { type: Number }, // Precio final calculado
-  // Seguimiento de tiempos
-  requestedAt: { type: Date, default: Date.now },
-  assignedAt: { type: Date },
-  startedAt: { type: Date },
-  completedAt: { type: Date },
-  cancelledAt: { type: Date },
-  // Información de pago
-  payment: {
-    status: { 
-      type: String, 
-      enum: ['pendiente', 'pre_autorizado', 'pagado', 'reembolsado', 'fallido'],
-      default: 'pendiente'
-    },
-    method: { 
-      type: String, 
-      enum: ['tarjeta', 'paypal', 'transferencia', 'efectivo']
-    },
-    paidAt: { type: Date },
-    servicePhotos: [{
-        before: String, // URL de la imagen antes del servicio
-        after: String,  // URL de la imagen después del servicio
-        description: String
-      }],
-  },
-  // Calificación y reseña
-//   rating: {
-//     score: { type: Number, min: 1, max: 5 },
-//     comment: { type: String },
-//     metrics: {
-//       puntualidad: { type: Number, min: 1, max: 5 },
-//       calidad: { type: Number, min: 1, max: 5 },
-//       comunicacion: { type: Number, min: 1, max: 5 },
-//       precioCalidad: { type: Number, min: 1, max: 5 }
-//     },
-//     ratedAt: { type: Date }
-//   },
-  // Operador de historial para cambios de estado
-//   statusHistory: [{
-//     status: { type: String },
-//     timestamp: { type: Date, default: Date.now },
-//     notes: { type: String }
-//   }]
-});
+  totalPrice:  { type: Number, required: true },
+  deliveryAddress: { type: String, required: true },
+  paymentMethod: { type: String, required: true },
+  status: { type: String, default: 'pendiente' }, // 'pendiente', 'en preparación', 'en camino', 'cancelado', 'entregado'
+  nota: { type: String },
+  coupon: {
+    code: { type: String },
+    discountPercentage: { type: Number },
+    discountAmount: { type: Number }
+  }
+}, { timestamps: true });
 
-const ServiceOrder = mongoose.model('ServiceOrder', serviceOrderSchema);
-export default ServiceOrder;
+const Order = model('Order', orderSchema);
+export default Order;

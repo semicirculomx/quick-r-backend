@@ -10,6 +10,9 @@ const addressSchema = new Schema({
   title: {
     type: String,
   },
+  address: {
+    type: String
+  },
   street: {
     type: String,
   },
@@ -26,9 +29,11 @@ const addressSchema = new Schema({
     type: String,
   },
   references: String,
-  coordinates: {
-    lat: Number,
-    lng: Number
+  location: {
+    coordinates: {
+      lat: Number,
+      lng: Number
+    },
   },
   isDefault: {
     type: Boolean,

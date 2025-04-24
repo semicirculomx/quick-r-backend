@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
-
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true
+  // Datos básicos del usuario
+  name: { 
+    type: String, 
+    required: false 
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true 
   },
   password: {
     type: String,
@@ -19,6 +19,12 @@ const userSchema = new Schema({
       return !this.googleId;
     }
   },
+  phone: { 
+    type: String, 
+    required: false 
+  },
+  
+  // Autenticación y permisos
   googleId: {
     type: String
   },
@@ -27,9 +33,20 @@ const userSchema = new Schema({
     enum: ['client', 'operator', 'admin'],
     default: 'client'
   },
-  phone: {
-    type: String
+  is_online: { 
+    type: Boolean, 
+    required: true 
   },
+  is_verified: { 
+    type: Boolean, 
+    required: false 
+  },
+  verify_code: { 
+    type: Number, 
+    required: false 
+  },
+
+  // Perfil y preferencias
   profilePicture: {
     type: String
   },
@@ -51,6 +68,7 @@ const userSchema = new Schema({
       paymentToken: { type: String } // Token generado por el servicio de pagos
     }]
   },
+  
   // Campos específicos para operadores
   operatorProfile: {
     isActive: {
@@ -62,7 +80,7 @@ const userSchema = new Schema({
       average: { type: Number, default: 0 },
       count: { type: Number, default: 0 },
     },
-    // Categorías en las que puede trabajar (en lugar de servicios específicos)
+    // Categorías en las que puede trabajar
     serviceCategories: [{
       category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
     }],
@@ -72,11 +90,8 @@ const userSchema = new Schema({
       currentServiceOrder: { type: mongoose.Schema.Types.ObjectId, ref: 'ServiceOrder' },
     },
   },
-  verificationToken: String,
-  verificationTokenExpires: Date,
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
-  isVerified: { type: Boolean, default: false },
+  
+  // Timestamps
   createdAt: {
     type: Date,
     default: Date.now
