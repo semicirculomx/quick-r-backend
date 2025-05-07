@@ -45,7 +45,9 @@ const userSchema = new Schema({
     type: Number, 
     required: false 
   },
-
+  stripeCustomerId: {
+    type: String
+  },
   // Perfil y preferencias
   profilePicture: {
     type: String
@@ -55,18 +57,9 @@ const userSchema = new Schema({
   },
   // Campos específicos para clientes
   customerProfile: {
-    preferredPaymentMethod: {
+    defaultPaymentMethodId: {
       type: String,
-      enum: ['card', 'cash'],
-      default: 'card'
-    },
-    savedCards: [{
-      isDefault: { type: Boolean, default: false },
-      last4: String,
-      brand: String,
-      stripeCardId: String,
-      paymentToken: { type: String } // Token generado por el servicio de pagos
-    }]
+    }
   },
   
   // Campos específicos para operadores

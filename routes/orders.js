@@ -13,6 +13,7 @@ import deleteOrder from '../controllers/orders/deleteOrder.js';
 import deleteOrders from '../controllers/orders/deleteOrders.js';
 import { myOrders } from '../controllers/orders/myOrders.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
+import { createNewOrder } from '../controllers/orderController.js';
 
 const router = express.Router();
 
@@ -52,7 +53,7 @@ router.get('/geocode', passport.authenticate('jwt', { session: false }), async (
 router.get('/my-orders', passport.authenticate('jwt', { session: false }), myOrders);
 
 // Ruta para crear una nueva orden
-router.post('/', passport.authenticate('jwt', { session: false }), emptyCart, addressExist, createOrder);
+router.post('/', passport.authenticate('jwt', { session: false }), addressExist, createNewOrder);
 
 // Ruta para obtener el total de ingresos por órdenes
 router.get('/total-revenue', passport.authenticate('jwt', { session: false }), isAdmin, getTotalRevenue);

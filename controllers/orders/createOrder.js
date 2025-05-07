@@ -29,7 +29,7 @@ const sendPushNotification = async (expoPushToken, title, body, data) => {
 };
 
 const createOrder = async (req, res) => {
-    const { cartId, deliveryAddress, paymentMethod, couponId = null, nota } = req.body;
+    const { serviceId, vehicleId, addressId, paymentMethod, couponId = null } = req.body;
     const userId = req.user._id.toString();
 
     let updatedProducts = []; // Track updated products for rollback

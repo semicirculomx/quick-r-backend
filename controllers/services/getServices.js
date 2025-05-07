@@ -1,8 +1,8 @@
 import Service from '../../models/Service.js';
 
-const read = async (req, res) => {
-    try {
-        const { sort, title, priceOrder, category, page = 1, limit } = req.query;
+const getAllServices = async (req, res) => {
+    try {        
+         const { sort, title, priceOrder, category, page = 1, limit } = req.query;
 
         // Validar y establecer el límite de resultados por página
         const paginationLimit = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 8;
@@ -55,4 +55,4 @@ const read = async (req, res) => {
     }
 };
 
-export default read;
+export default getAllServices;

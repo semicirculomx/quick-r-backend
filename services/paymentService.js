@@ -1,18 +1,22 @@
 // src/services/paymentService.js
 import Stripe from 'stripe';
+import Order from '../models/Order';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const createPaymentIntent = async (amount) => {
+export const createPaymentIntent = async (order) => {
   try {
     // Convertir a centavos para Stripe
+    const { amount } = order;
     const amountInCents = Math.round(amount * 100);
     
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountInCents,
-      currency: 'mxn',
-      payment_method_types: ['card'],
-    });
+    console.log('Creating payment intent with amount:', order);
+    // const paymentIntent = await stripe.paymentIntents.create({
+    //   ...order,
+    //   amount: amountInCents,
+    //   currency: 'mxn',
+    //   payment_method_types: ['card'],
+    // });
     
     return paymentIntent;
   } catch (error) {

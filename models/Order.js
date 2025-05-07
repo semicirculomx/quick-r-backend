@@ -1,23 +1,52 @@
 import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
+const { Schema, model, Types } = mongoose;
 
-const orderSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  services: [{
-    product: { type: Schema.Types.ObjectId, ref: 'Service', required: true },
-    quantity: { type: Number, required: true },
-  }],
-  totalPrice:  { type: Number, required: true },
-  deliveryAddress: { type: String, required: true },
-  paymentMethod: { type: String, required: true },
-  status: { type: String, default: 'pendiente' }, // 'pendiente', 'en preparación', 'en camino', 'cancelado', 'entregado'
-  nota: { type: String },
+const OrderSchema = new Schema({
+  user: { type: Types.ObjectId, ref: 'User', required: true },
+  service: { type: Types.ObjectId, ref: 'Service', required: true },
+  vehicle: { type: Types.ObjectId, ref: 'Vehicle', required: true },
+  address: { type: Types.ObjectId, ref: 'Address', required: true },
+  scheduled: { type: Date, required: false },
+  totalAmount: { type: Number, required: true },
   coupon: {
     code: { type: String },
     discountPercentage: { type: Number },
     discountAmount: { type: Number }
-  }
-}, { timestamps: true });
+  },
+  finalAmount: { type: Number, required: true },
+  paymentMethodId: { type: String },
+  paymentStatus: {
+    type: String,
+    enum: ['processing', 'requires_action', 'requires_capture', 'requires_confirmation', 'requires_payment_method', 'succeeded', 'canceled'],
+    default: null
+  },
+  paymentIntentId: { type: String },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'assigned', 'in_progress', 'completed', 'cancelled'],
+    default: 'pending'
+  },
+  operator: { type: Types.ObjectId, ref: 'User' },
+  notes: { type: String },
+  additionalServices: [{ type: Types.ObjectId, ref: 'Service' }],
+  rating: {
+    score: { type: Number, min: 1, max: 5 },
+    comment: { type: String }
+  },
+  confirmedAt: { type: Date },
+  assignedAt: { type: Date },
+  startTime: { type: Date },
+  finishedAt: { type: Date },
+  cancellationTime: { type: Date },
+  cancelReason: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
 
-const Order = model('Order', orderSchema);
-export default Order;
+// Automatically update `updatedAt` field
+OrderSchema.pre('save', function (next) {
+  this.updatedAt = new Date();
+  next();
+});
+
+export default model('Order', OrderSchema);
