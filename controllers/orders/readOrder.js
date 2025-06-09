@@ -3,7 +3,7 @@ import Order from '../../models/Order.js';
 const readOrder = async (req, res) => {
     try {
         // Obtener el ID de la orden desde los parámetros de la solicitud
-        const { orderId } = req.params;
+        const orderId = req.params.id;
 
         // Verificar que el ID sea válido
         if (!orderId) {
@@ -11,7 +11,13 @@ const readOrder = async (req, res) => {
         }
 
         // Buscar la orden por ID
-        const order = await Order.findById(orderId);
+        const order = await Order.findById(orderId)
+        .populate('service', 'title description price duration images')
+        .populate('vehicle', 'plate size')
+        .populate('address', 'address')
+        .populate('user', 'name email phone')
+        .populate('operator', 'name email phone')
+        .populate('additionalServices', 'title description price images');
 
         // Si no se encuentra la orden, devolver un error 404
         if (!order) {

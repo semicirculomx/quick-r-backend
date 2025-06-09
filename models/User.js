@@ -5,7 +5,8 @@ const userSchema = new Schema({
   // Datos básicos del usuario
   name: { 
     type: String, 
-    required: false 
+    required: false,
+    default: null
   },
   email: { 
     type: String, 
@@ -80,7 +81,7 @@ const userSchema = new Schema({
     // Estado actual del operador
     currentStatus: {
       status: { type: String, enum: ['available', 'assigned', 'on_service', 'off'], default: 'off' },
-      currentServiceOrder: { type: mongoose.Schema.Types.ObjectId, ref: 'ServiceOrder' },
+      currentServiceOrder: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
     },
   },
   

@@ -8,6 +8,8 @@ import logger from 'morgan'; // Módulo para el registro (logging) de solicitude
 import path from 'path'; // Módulo para trabajar con rutas de archivos y directorios
 import indexRouter from './routes/index.js'; // Enrutador para la página principal
 import { __dirname } from './utils/util.js';
+import { Server } from 'socket.io';
+import http from 'http';
 // Crear una instancia de la aplicación Express
 const app = express();
 
@@ -41,4 +43,59 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json(errorDetails);
 });
 
-export default app; // Exportar la instancia de la aplicación Express
+// Crear servidor HTTP
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*", // Permite todos los orígenes temporalmente
+    methods: ["GET", "POST"]
+  },
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutos
+    skipMiddlewares: true,
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('Nuevo cliente conectado:', socket.id);
+
+   // Operador se une a su sala personal
+  socket.on('joinOperatorRoom', (operatorId) => {
+    socket.join(`operator_${operatorId}`);
+    console.log(`Operador ${operatorId} (${socket.id}) unido a su sala`);
+  });
+
+  socket.on('leaveOperatorRoom', (operatorId) => {
+    socket.leave(`operator_${operatorId}`);
+    console.log(`Operador ${operatorId} (${socket.id}) salio de su sala`);
+  });
+
+  // Manejar unión a sala de orden específica
+  socket.on('joinOrderRoom', (orderId) => {
+    socket.join(`order_${orderId}`);
+    console.log(`Cliente ${socket.id} unido a orden ${orderId}`);
+  });
+
+  // Manejar salida de sala de orden
+  socket.on('leaveOrderRoom', (orderId) => {
+    socket.leave(`order_${orderId}`);
+    console.log(`Cliente ${socket.id} salió de orden ${orderId}`);
+  });
+
+  // Manejar actualización de ubicación del operador
+  socket.on('updateOperatorLocation', (data) => {
+    const { orderId, location } = data;
+    // Emitir solo a los clientes en la sala de esta orden
+    io.to(`order_${orderId}`).emit('operatorLocationUpdate', {
+      orderId,
+      location
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Cliente desconectado:', socket.id);
+  });
+});
+
+// Exportar ambos servidores
+export { app, httpServer as server, io };

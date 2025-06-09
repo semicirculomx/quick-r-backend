@@ -1,5 +1,4 @@
 import Order from '../../models/Order.js';
-import Product from '../../models/Product.js';
 
 // Controlador para obtener las órdenes de un usuario
 export const myOrders = async (req, res) => {
@@ -8,14 +7,8 @@ export const myOrders = async (req, res) => {
         const userId = req.user._id;
 
         // Buscar todas las órdenes del usuario autenticado
-        const orders = await Order.find({ user: userId })
-            .populate({
-                path: 'products.product',
-                model: Product,
-                select: 'name price images stock'
-            })
-            .sort({ createdAt: -1 }); // Ordenar por fecha de creación, más reciente primero
-
+        const orders = await Order.find({ user: userId }).populate('service vehicle address operator additionalServices')
+           
         // Verificar si el usuario tiene órdenes
         if (!orders.length) {
             return res.status(404).json({

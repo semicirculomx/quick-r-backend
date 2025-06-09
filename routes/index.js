@@ -13,6 +13,7 @@ import utilsRoutes from './utils.js'
 import addressesRoutes from './addresses.js'
 import vehicleRoutes from './vehicles.js'
 import servicesRouter from './services.js'
+import timeSlotsRouter from './timeSlots.js'; // Placeholder for time slots, to be implemented later
 // Creamos un nuevo objeto router
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use('/utils', utilsRoutes)
 router.use('/addresses', addressesRoutes)
 router.use('/vehicles', vehicleRoutes)
 router.use('/services', servicesRouter)
+router.use('/time-slots', timeSlotsRouter); // Placeholder for time slots, to be implemented later
 // Exportamos el objeto router
 export default router;

@@ -9,7 +9,7 @@ const isAdmin = async (req, res, next) => {
                 message: "Usuario no encontrado"
             });
         }
-        if (userAdmin.role !== 1) {
+        if (userAdmin.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: "Error al verificar: No tienes acceso para ingresar"

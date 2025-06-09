@@ -7,6 +7,7 @@ const OrderSchema = new Schema({
   vehicle: { type: Types.ObjectId, ref: 'Vehicle', required: true },
   address: { type: Types.ObjectId, ref: 'Address', required: true },
   scheduled: { type: Date, required: false },
+  isInstant: { type: Boolean},
   totalAmount: { type: Number, required: true },
   coupon: {
     code: { type: String },
@@ -23,7 +24,7 @@ const OrderSchema = new Schema({
   paymentIntentId: { type: String },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'assigned', 'in_progress', 'completed', 'cancelled'],
+    enum: ['pending', 'confirmed', 'assigned', 'in_progress', 'in_review', 'completed', 'cancelled'],
     default: 'pending'
   },
   operator: { type: Types.ObjectId, ref: 'User' },
@@ -37,6 +38,7 @@ const OrderSchema = new Schema({
   assignedAt: { type: Date },
   startTime: { type: Date },
   finishedAt: { type: Date },
+  reviewedAt: { type: Date},
   cancellationTime: { type: Date },
   cancelReason: { type: String },
   createdAt: { type: Date, default: Date.now },

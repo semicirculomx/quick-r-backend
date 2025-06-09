@@ -36,6 +36,10 @@ router.post('/create-setup-intent', passport.authenticate('jwt', { session: fals
       customer: user.stripeCustomerId,
       payment_method_types: ['card'],
       usage: 'off_session',
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never'
+      }
     });
 
     res.json({

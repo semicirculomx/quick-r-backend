@@ -11,10 +11,22 @@ import getTotalRevenue from '../controllers/orders/totalRevenue.js';
 import readOrder from '../controllers/orders/readOrder.js';
 import deleteOrder from '../controllers/orders/deleteOrder.js';
 import deleteOrders from '../controllers/orders/deleteOrders.js';
-import { myOrders } from '../controllers/orders/myOrders.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
-import { createNewOrder } from '../controllers/orderController.js';
-
+import {
+    createNewOrder,
+    updateStatus,
+    assignOrderOperator,
+    confirmOrder,
+    completeAssignedOrder,
+    cancelUserOrder,
+    addServiceToExistingOrder,
+    rateCompletedOrder,
+    inProcessOrder,
+    completeReview,
+    myOrders,
+    getAssignedOrdersForOperator 
+  } from '../controllers/orderController.js';
+import { isOperator } from '../middlewares/isOperator.js'; // Ensure this middleware is correctly implemented
 const router = express.Router();
 
 
@@ -51,10 +63,12 @@ router.get('/geocode', passport.authenticate('jwt', { session: false }), async (
 });
 // Ruta para ver mis órdenes (debe ir antes de las rutas con parámetros dinámicos)
 router.get('/my-orders', passport.authenticate('jwt', { session: false }), myOrders);
-
+// Rutas para operadores
+router.get('/assigned', passport.authenticate('jwt', { session: false }),
+//  isOperator,
+ getAssignedOrdersForOperator); // <--- NEW ROUTE
 // Ruta para crear una nueva orden
 router.post('/', passport.authenticate('jwt', { session: false }), addressExist, createNewOrder);
-
 // Ruta para obtener el total de ingresos por órdenes
 router.get('/total-revenue', passport.authenticate('jwt', { session: false }), isAdmin, getTotalRevenue);
 
@@ -65,13 +79,40 @@ router.get('/last-orders', passport.authenticate('jwt', { session: false }), isA
 router.get('/total-orders', passport.authenticate('jwt', { session: false }), isAdmin, totalOrders);
 
 // Ruta para leer una orden específica por ID
-router.get('/:orderId', passport.authenticate('jwt', { session: false }), readOrder);
+router.get('/:id', passport.authenticate('jwt', { session: false }), readOrder);
+
+router.put('/:id/cancel', passport.authenticate('jwt', { session: false }), cancelUserOrder);
+router.put('/:id/additional-service', passport.authenticate('jwt', { session: false }), addServiceToExistingOrder);
+router.put('/:id/rate', passport.authenticate('jwt', { session: false }), rateCompletedOrder);
+router.put('/:id/verification',
+        //isOwner,
+    completeReview);
+
+router.put('/:id/accept',
+    //isAdmin,
+    confirmOrder);
+
+router.put('/:id/assign',
+   // isAdmin,
+    assignOrderOperator);
+
+router.put('/:id/in_progress',
+        // isOperator,
+    inProcessOrder);
+
+router.put('/:id/complete',
+    //isOperator,
+    completeAssignedOrder);
+
+router.put('/:id/status',
+    //isAdmin,
+     updateStatus);
 
 // Ruta para actualizar una orden existente
 router.patch('/:id', passport.authenticate('jwt', { session: false }), isAdmin, updateOrder);
 
 // Ruta para eliminar una orden específica por ID
-router.delete('/:orderId', passport.authenticate('jwt', { session: false }), isAdmin, deleteOrder);
+router.delete('/:id', passport.authenticate('jwt', { session: false }), isAdmin, deleteOrder);
 
 // Ruta para obtener todas las órdenes
 router.get('/', passport.authenticate('jwt', { session: false }), isAdmin, getAllOrders);

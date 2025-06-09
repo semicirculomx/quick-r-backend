@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 
 const notificationSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  message: { type: String, required: true },
-  type: { type: String, required: true }, // 'order_confirmation', 'promotion'
+  user: { type: Schema.Types.ObjectId, ref: 'User', },
+  message: { type: String,  },
+  type: { type: String,  }, // 'order_confirmation', 'promotion'
   read: { type: Boolean, default: false }
 }, { timestamps: true });
 

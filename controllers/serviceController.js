@@ -7,12 +7,7 @@ import {
 } from '../services/serviceService.js';
 
 export const addService = async (req, res) => {
-  try {
-    // Este endpoint debería ser solo para admins
-    // if (req.user.role !== 'admin') {
-    //   return res.status(403).json({ error: 'No autorizado' });
-    // }
-    
+  try {  
     const serviceData = req.body;
     const service = await createService(serviceData);
     res.status(201).json({ data: service, success: true });
