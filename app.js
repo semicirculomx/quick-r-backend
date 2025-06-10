@@ -46,9 +46,10 @@ app.use((err, req, res, next) => {
 // Crear servidor HTTP
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
+  path: '/ws', // <-- importante que coincida
   cors: {
-    origin: "*", // Permite todos los orígenes temporalmente
-    methods: ["GET", "POST"]
+    origin: '*', // O ajusta a tu dominio
+    methods: ['GET', 'POST'],
   },
   connectionStateRecovery: {
     maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutos
